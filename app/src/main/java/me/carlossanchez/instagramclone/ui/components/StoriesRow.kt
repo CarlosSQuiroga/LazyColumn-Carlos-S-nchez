@@ -32,6 +32,76 @@ import me.carlossanchez.instagramclone.model.Story
 @Composable
 fun StoriesRow(stories: List<Story>) {
     LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(
+            horizontal = 12.dp,
+            vertical = 8.dp
+        ),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(
+            items = stories,
+            key = { story -> story.id }
+        ) { story ->
+            StoryItem(story = story)
+        }
+    }
+}
 
-    )
+@Composable
+fun StoryItem(story: Story) {
 
+    val borderBrush = if (!story.hasSeen) {
+        Brush.linearGradient(
+            colors = listOf(
+                Color(0xFFF09433),
+                Color(0xFFDC2743),
+                Color(0xFFBC1888)
+            )
+        )
+    } else {
+        Brush.linearGradient(
+            colors = listOf(
+                Color.LightGray,
+                Color.LightGray
+            )
+        )
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(70.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(64.dp)
+                .border(
+                    width = 2.dp,
+                    brush = borderBrush,
+                    shape = CircleShape
+                )
+                .padding(3.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                model = story.profileImageUrl,
+                contentDescription = story.username,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.height(4.dp)
+        )
+
+        Text(
+            text = story.username,
+            fontSize = 11.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
